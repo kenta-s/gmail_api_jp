@@ -1,4 +1,10 @@
 require "gmail_api_jp/version"
+require "google/apis/gmail_v1"
+require "googleauth"
+require "googleauth/stores/file_token_store"
+
+require "fileutils"
+require "yaml"
 
 module GmailApiJp
   class Draft
