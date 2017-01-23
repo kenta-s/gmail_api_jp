@@ -8,14 +8,7 @@ require "yaml"
 
 module GmailApiJp
   class Draft
-    CONFIG = YAML.load_file("gmail_draft.yml")
-
-    OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
-    APPLICATION_NAME = CONFIG["application_name"]
-    CLIENT_SECRETS_PATH = CONFIG["client_secrets_path"] || "client_secret.json"
-    CREDENTIALS_PATH = CONFIG["stored_credential_path"] || File.join(Dir.home, '.credentials',
-                                                                     "gmail-draft-jp.yaml")
-    SCOPE = CONFIG["scope"] || "https://mail.google.com/"
+    attr_accessor :text
 
     # the argument text should be like:
     #
@@ -31,8 +24,17 @@ module GmailApiJp
     #  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
     #  Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     def initialize(text)
+      @config = YAML.load_file("gmail_draft.yml")
+
+      @oob_uri = 'urn:ietf:wg:oauth:2.0:oob'
+      @app_name = @config["application_name"]
+      @client_secrets_path = @config["client_secrets_path"] || "client_secret.json"
+      @credentials_path = @config["stored_credential_path"] || File.join(Dir.home, '.credentials',
+                                                                       "gmail-draft-jp.yaml")
+      @scope = @config["scope"] || "https://mail.google.com/"
+
       @service = Google::Apis::GmailV1::GmailService.new
-      @service.client_options.application_name = APPLICATION_NAME
+      @service.client_options.application_name = @app_name
       @service.authorization = authorize
       @text = text.encode("ISO-2022-JP")
     end
@@ -58,23 +60,23 @@ module GmailApiJp
     #
     # @return [Google::Auth::UserRefreshCredentials] OAuth2 credentials
     def authorize
-      FileUtils.mkdir_p(File.dirname(CREDENTIALS_PATH))
+      FileUtils.mkdir_p(File.dirname(@credentials_path))
 
-      client_id = Google::Auth::ClientId.from_file(CLIENT_SECRETS_PATH)
-      token_store = Google::Auth::Stores::FileTokenStore.new(file: CREDENTIALS_PATH)
+      client_id = Google::Auth::ClientId.from_file(@client_secrets_path)
+      token_store = Google::Auth::Stores::FileTokenStore.new(file: @credentials_path)
       authorizer = Google::Auth::UserAuthorizer.new(
-          client_id, SCOPE, token_store)
+          client_id, @scope, token_store)
       user_id = 'default'
       credentials = authorizer.get_credentials(user_id)
       if credentials.nil?
         url = authorizer.get_authorization_url(
-            base_url: OOB_URI)
+            base_url: @oob_uri)
         puts "Open the following URL in the browser and enter the " +
                  "resulting code after authorization"
         puts url
         code = gets
         credentials = authorizer.get_and_store_credentials_from_code(
-            user_id: user_id, code: code, base_url: OOB_URI)
+            user_id: user_id, code: code, base_url: @oob_uri)
       end
       credentials
     end
