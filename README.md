@@ -1,7 +1,8 @@
 # GmailApiJp
 
 GmailApiJp helps you create Gmail drafts more easily by using Ruby.  
-It lets you avoid implementing a complicated coding on handling Gmail API to do so.
+It lets you avoid implementing a complicated coding on handling Gmail API to do so.  
+This Gem completely supports Japanese language.
 
 ## Preparation
 
@@ -26,14 +27,14 @@ Or install it yourself as:
     $ gem install gmail_api_jp
 
 Put a yaml file named `gmail_draft.yml` to your application's root directory.
-the yaml file is like: 
+the yaml file should be like: 
 ```yaml
 application_name: Your application name 
 client_secrets_path: "/Path/to/your/client_secret.json"
 ```
 ## Usage
 
-First, require this.
+First, require gmail_api_jp.  
 `require 'gmail_api_jp'`
 
 Create a string for the draft like this:
