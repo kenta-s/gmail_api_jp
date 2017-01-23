@@ -24,14 +24,14 @@ module GmailApiJp
     #  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
     #  Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     def initialize(text)
-      @config = YAML.load_file("gmail_draft.yml")
+      config = YAML.load_file("gmail_draft.yml")
 
       @oob_uri = 'urn:ietf:wg:oauth:2.0:oob'
-      @app_name = @config["application_name"]
-      @client_secrets_path = @config["client_secrets_path"] || "client_secret.json"
-      @credentials_path = @config["stored_credential_path"] || File.join(Dir.home, '.credentials',
+      @app_name = config["application_name"]
+      @client_secrets_path = config["client_secrets_path"] || "client_secret.json"
+      @credentials_path = config["stored_credential_path"] || File.join(Dir.home, '.credentials',
                                                                        "gmail-draft-jp.yaml")
-      @scope = @config["scope"] || "https://mail.google.com/"
+      @scope = config["scope"] || "https://mail.google.com/"
 
       @service = Google::Apis::GmailV1::GmailService.new
       @service.client_options.application_name = @app_name
