@@ -62,8 +62,8 @@ Then, initialize a GmailApiJp::Draft instance with the string you just declared.
 draft = GmailApiJp::Draft.new(text)
 draft.create_draft
 ```
-
-You will see a new draft when you sign in your Gmail account. Congratulations.   
+Congratulations!   
+You will see a new draft when you sign in your Gmail account.  
 
 Subject and Body can handle Japanese characters.
 
